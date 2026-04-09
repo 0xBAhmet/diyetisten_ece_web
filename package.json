@@ -34,4 +34,10 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   }
+  "scripts": {
+    "dev": "next dev",
+    "build": "npx prisma generate && npx prisma db push && next build",
+    "start": "next start",
+    "lint": "eslint"
+  }
 }
