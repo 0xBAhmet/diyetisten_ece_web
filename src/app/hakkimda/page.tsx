@@ -10,8 +10,14 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
-  const settingsDb = await prisma.setting.findMany();
-  const settings = settingsDb.reduce((acc: any, s: any) => ({ ...acc, [s.key]: s.value }), {} as Record<string, string>);
+  let settings: Record<string, string> = {};
+  
+  try {
+    const settingsDb = await prisma.setting.findMany();
+    settings = settingsDb.reduce((acc: any, s: any) => ({ ...acc, [s.key]: s.value }), {} as Record<string, string>);
+  } catch (error: any) {
+    console.error("Hakkimda sayfasında veritabanı hatası:", error);
+  }
 
   const aboutHeadline = settings.about_headline || "Sağlık için Bilim ve\nDoğayı Buluşturuyorum.";
   const aboutText = settings.about_text || "Merhaba! Ben, beslenme alışkanlıklarınızı kısıtlayıcı diyetlerle değil, size özel sürdürülebilir yöntemlerle iyileştirmeyi hedefleyen bir Uzman Diyetisyenim.\n\nYıllar süren eğitimim ve vaka tecrübelerimle, her bedenin farklı bir hikayesi olduğuna inanıyorum. Hedefimiz sadece yaza hazırlanmak değil, tüm bir ömrü enerjik ve mutlu geçirmek.";
