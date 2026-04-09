@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import path from "path";
 
 export async function POST(req: Request) {
   try {
@@ -11,15 +9,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
     }
 
+    // Convert file to Base64 to bypass Netlify Read-Only File System restriction
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const mimeType = file.type || 'image/jpeg';
+    
+    // Create base64 Data URI
+    const base64String = `data:${mimeType};base64,${buffer.toString('base64')}`;
 
-    // Save to public/uploads
-    const filename = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "-");
-    const filepath = path.join(process.cwd(), "public/uploads", filename);
-    await writeFile(filepath, buffer);
-
-    return NextResponse.json({ success: true, url: `/uploads/${filename}` });
+    // Return the base64 string directly so it can be saved in the database
+    return NextResponse.json({ success: true, url: base64String });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

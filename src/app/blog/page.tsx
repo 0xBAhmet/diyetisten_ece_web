@@ -5,9 +5,14 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  let posts: any[] = [];
+  try {
+    posts = await prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error: any) {
+    console.error("Blog sayfasında veritabanı hatası:", error);
+  }
 
   return (
     <main className="container mx-auto px-6 py-12 md:py-24 max-w-5xl min-h-[80vh]">
