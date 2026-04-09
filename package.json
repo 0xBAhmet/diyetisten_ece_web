@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx prisma generate && npx prisma db push && next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -33,11 +33,5 @@
     "prisma": "^6.4.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
-  "scripts": {
-    "dev": "next dev",
-    "build": "npx prisma generate && npx prisma db push && next build",
-    "start": "next start",
-    "lint": "eslint"
   }
 }
